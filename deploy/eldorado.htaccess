@@ -1,0 +1,42 @@
+# El Dorado app folder — SPA fallback inside /eldorado/
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /eldorado/
+
+  # Never expose the game-start log over HTTP
+  RewriteRule ^game-starts\.log$ - [F,L]
+
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /eldorado/index.html [L]
+</IfModule>
+
+# Block direct download of log files (Apache 2.2 + 2.4)
+<FilesMatch "\.(log)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# Ensure hit.php is never cached (DreamHost / browser)
+<Files "hit.php">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </IfModule>
+</Files>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
