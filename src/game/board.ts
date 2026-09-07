@@ -89,42 +89,45 @@ const TILE_TERRAIN: Record<'B' | 'C' | 'N' | 'I' | 'K', Record<string, Terr>> = 
     '0,3': t('camp', 1),
   },
   C: {
-    '0,-3': t('river', 2),
-    '1,-3': t('river', 1),
+    // From reference-board orthophoto (leveled ~13° CW), axial lattice with mountain at 0,0.
+    // Colors corrected with (1,2)=jungle. Counts: 6 jungle, 12 river, 9 village, 9 rubble, 1 mountain.
+    '0,-3': t('rubble', 2),
+    '1,-3': t('river', 2),
     '2,-3': t('river', 2),
-    '3,-3': t('river', 1),
+    '3,-3': t('rubble', 2),
     '-1,-2': t('rubble', 2),
-    '0,-2': t('rubble', 1),
-    '1,-2': t('river', 2),
-    '2,-2': t('river', 1),
-    '3,-2': t('river', 2),
-    '-2,-1': t('rubble', 1),
-    '-1,-1': t('rubble', 1),
-    '0,-1': t('river', 1),
-    '1,-1': t('river', 1),
-    '2,-1': t('village', 2),
-    '3,-1': t('village', 1),
-    '-3,0': t('rubble', 2),
-    '-2,0': t('rubble', 2),
-    '-1,0': t('rubble', 2),
+    '0,-2': t('river', 2),
+    '1,-2': t('rubble', 2),
+    '2,-2': t('rubble', 2),
+    '3,-2': t('village', 1),
+    '-2,-1': t('jungle', 1),
+    '-1,-1': t('rubble', 2),
+    '0,-1': t('village', 1),
+    '1,-1': t('river', 2),
+    '2,-1': t('village', 1),
+    '3,-1': t('river', 2),
+    '-3,0': t('jungle', 2),
+    '-2,0': t('village', 1),
+    '-1,0': t('village', 1),
     '0,0': t('mountain', 0),
-    '1,0': t('village', 1),
+    '1,0': t('river', 2),
     '2,0': t('village', 1),
-    '3,0': t('village', 2),
-    '-3,1': t('rubble', 2),
-    '-2,1': t('rubble', 1),
-    '-1,1': t('village', 1),
-    '0,1': t('village', 1),
-    '1,1': t('village', 1),
-    '2,1': t('village', 2),
-    '-3,2': t('jungle', 1),
-    '-2,2': t('jungle', 1),
-    '-1,2': t('jungle', 1),
-    '0,2': t('jungle', 1),
+    '3,0': t('river', 2),
+    '-3,1': t('jungle', 2),
+    '-2,1': t('river', 2),
+    '-1,1': t('rubble', 2),
+    '0,1': t('river', 2),
+    '1,1': t('jungle', 1),
+    '2,1': t('river', 2),
+    '-3,2': t('river', 2),
+    '-2,2': t('village', 1),
+    '-1,2': t('rubble', 2),
+    '0,2': t('rubble', 2),
     '1,2': t('jungle', 1),
-    '-2,3': t('jungle', 1),
-    '-1,3': t('river', 1),
-    '0,3': t('river', 1),
+    '-3,3': t('river', 2),
+    '-2,3': t('village', 1),
+    '-1,3': t('village', 1),
+    '0,3': t('jungle', 1),
   },
   N: {
     '0,-3': t('jungle', 1),
@@ -495,7 +498,7 @@ export function assembleBoard(
     }
   }
 
-  // Starts on the first B piece’s western edge
+  // Starts on the first B piece’s northwest edge
   const bPlace = placements.find((p) => p.tile === 'B')
   if (bPlace) {
     for (const c of Object.values(cells)) {
@@ -507,10 +510,10 @@ export function assembleBoard(
         }
       }
     }
-    // Four westernmost jungle hexes on B, numbered top→bottom (official starts 1–4).
-    // Prefer a contiguous west column: take face-west jungles first, then fill by X.
-    let bestDir = 3
-    let bestX = Infinity
+    // Four NW-edge hexes on B, numbered top→bottom (official starts 1–4).
+    // Prefer the face whose average pixel sits furthest northwest (low x + low y).
+    let bestDir = 2
+    let bestScore = Infinity
     for (let d = 0; d < 6; d++) {
       const edge = edgeLocals(3, d)
         .map(([lq, lr]) => {
@@ -520,39 +523,26 @@ export function assembleBoard(
         .filter((c): c is HexCell => Boolean(c && c.pieceId === bPlace.id))
       if (edge.length < 4) continue
       const avgX = edge.reduce((s, c) => s + hexToPixel(c.q, c.r, 1).x, 0) / edge.length
-      if (avgX < bestX) {
-        bestX = avgX
+      const avgY = edge.reduce((s, c) => s + hexToPixel(c.q, c.r, 1).y, 0) / edge.length
+      const score = avgX + avgY
+      if (score < bestScore) {
+        bestScore = score
         bestDir = d
       }
     }
-    const faceJungles = edgeLocals(3, bestDir)
+    const faceHexes = edgeLocals(3, bestDir)
       .map(([lq, lr]) => {
         const [rq, rr] = rotateQr(lq, lr, bPlace.rot)
         return cells[hexKey(bPlace.q + rq, bPlace.r + rr)]
       })
-      .filter((c): c is HexCell => Boolean(c && c.pieceId === bPlace.id && c.type === 'jungle'))
+      .filter((c): c is HexCell => Boolean(c && c.pieceId === bPlace.id))
       .sort((a, b) => hexToPixel(a.q, a.r, 1).y - hexToPixel(b.q, b.r, 1).y)
 
-    const picked = [...faceJungles]
-    if (picked.length < 4) {
-      const more = Object.values(cells)
-        .filter(
-          (c) =>
-            c.pieceId === bPlace.id &&
-            c.type === 'jungle' &&
-            !picked.includes(c),
-        )
-        .sort((a, b) => hexToPixel(a.q, a.r, 1).x - hexToPixel(b.q, b.r, 1).x)
-      picked.push(...more.slice(0, 4 - picked.length))
-    }
-    picked
-      .sort((a, b) => hexToPixel(a.q, a.r, 1).y - hexToPixel(b.q, b.r, 1).y)
-      .slice(0, 4)
-      .forEach((c, i) => {
-        c.type = 'start'
-        c.power = 0
-        c.isStart = i + 1
-      })
+    faceHexes.slice(0, 4).forEach((c, i) => {
+      c.type = 'start'
+      c.power = 0
+      c.isStart = i + 1
+    })
   }
 
   return cells
