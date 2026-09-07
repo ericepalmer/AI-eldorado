@@ -683,7 +683,10 @@ function RulesModal({ onClose }: { onClose: () => void }) {
             up — pay its fee to remove it (you stay put), then move onto the next tile. The first
             clearer keeps the border token; more borders win ties.
           </li>
-          <li>First to any of the three water finishes reaches El Dorado and triggers the final round.</li>
+          <li>
+            Reach a water finish (paddle), then play <strong>any card</strong> to step onto the
+            gold El Dorado hexes — first explorer there wins.
+          </li>
         </ul>
         <p className="fine">
           Faithful digital adaptation of Reiner Knizia&apos;s race — see{' '}

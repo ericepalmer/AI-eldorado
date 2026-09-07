@@ -1,5 +1,5 @@
 import { CARD_DEFS, STARTING_DECK, coinValue, getDef } from './cards'
-import { createFirstGameBoard, eldoradoId, neighbors, startPositions, terrainSymbol } from './board'
+import { createFirstGameBoard, neighbors, startPositions, terrainSymbol } from './board'
 import type {
   ActionEffect,
   CardInstance,
@@ -272,7 +272,9 @@ export function legalMoveTargets(
     if (!cell || cell.type === 'mountain') continue
 
     if (cell.type === 'eldorado') {
-      // Can only enter El Dorado from a finish space after reaching finish
+      // From a water finish, any card steps into the gold city (free).
+      const from = state.cells[origin]
+      if (from?.type === 'finish') out.push(id)
       continue
     }
 
@@ -341,7 +343,10 @@ export function legalNativeTargets(state: GameState): string[] {
   return adjacentCells(state, p.position).filter((id) => {
     if (isOccupied(state, id, p.id)) return false
     const cell = state.cells[id]
-    if (!cell || cell.type === 'mountain' || cell.type === 'eldorado') return false
+    if (!cell || cell.type === 'mountain') return false
+    if (cell.type === 'eldorado') {
+      return state.cells[p.position]?.type === 'finish'
+    }
     // Native may clear+enter a border hex, but cannot jump past an active border.
     if (cell.blockade) return true
     if (crossesActiveBorder(state, p.position, id)) return false
@@ -490,15 +495,11 @@ export function moveToCell(state: GameState, targetId: string): GameState {
   let s = updatePlayer(state, p.id, (pl) => ({ ...pl, position: targetId }))
   s = log(s, `${p.name} moved to ${cell.type} (${cost}).`)
 
-  // Reached finish → enter El Dorado and win (first to arrive claims the city).
-  if (cell.type === 'finish') {
+  // Stepped into the gold city — claim El Dorado (visible on the gold hex).
+  if (cell.type === 'eldorado') {
     s = finishCardUse(s, card, true)
-    s = updatePlayer(s, p.id, (pl) => ({
-      ...pl,
-      position: eldoradoId(s.cells, targetId),
-      reached: true,
-    }))
-    s = log(s, `${p.name} reached the gate to El Dorado!`)
+    s = updatePlayer(s, p.id, (pl) => ({ ...pl, reached: true }))
+    s = log(s, `${p.name} reached El Dorado!`)
     return endGame({
       ...s,
       finalRoundTriggered: true,
@@ -687,12 +688,8 @@ export function confirmNativeMove(state: GameState, targetId: string): GameState
   s = finishCardUse(s, card, true)
   s = { ...s, pendingAction: null }
 
-  if (cell?.type === 'finish') {
-    s = updatePlayer(s, p.id, (pl) => ({
-      ...pl,
-      position: eldoradoId(s.cells, targetId),
-      reached: true,
-    }))
+  if (cell?.type === 'eldorado') {
+    s = updatePlayer(s, p.id, (pl) => ({ ...pl, reached: true }))
     s = log(s, `${p.name} reached El Dorado!`)
     return endGame({
       ...s,

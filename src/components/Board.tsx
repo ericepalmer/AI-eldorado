@@ -76,9 +76,14 @@ function SymbolMarks({
   if (type === 'mountain') return null
   if (type === 'eldorado') {
     return (
-      <text x={x} y={y + 3} textAnchor="middle" className="hex-label" fill="#3a2a08" fontSize={9}>
-        ★
-      </text>
+      <g>
+        <text x={x} y={y + 1} textAnchor="middle" className="hex-label" fill="#3a2a08" fontSize={11}>
+          ★
+        </text>
+        <text x={x} y={y + 11} textAnchor="middle" className="hex-label" fill="#3a2a08" fontSize={6}>
+          ED
+        </text>
+      </g>
     )
   }
   if (type === 'start') return null

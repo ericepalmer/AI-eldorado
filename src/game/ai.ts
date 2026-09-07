@@ -66,6 +66,7 @@ function scoreTargetOnRoute(
 ): number {
   const cell = state.cells[cellId]
   if (!cell) return -9999
+  if (cell.type === 'eldorado') return 20_000
   if (cell.type === 'finish') return 10_000
   if (nextId && cellId === nextId) return 5_000
   const idx = routeIndex(plan, cellId)

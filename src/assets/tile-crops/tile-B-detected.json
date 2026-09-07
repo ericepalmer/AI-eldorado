@@ -1,45 +1,73 @@
 {
-  "-3,0": {
+  "0,-3": {
+    "type": "start",
+    "power": 0,
+    "isStart": 4
+  },
+  "1,-3": {
     "type": "jungle",
     "power": 1
   },
-  "-3,1": {
-    "type": "mountain",
-    "power": 0
-  },
-  "-3,2": {
-    "type": "river",
-    "power": 1
-  },
-  "-3,3": {
-    "type": "river",
-    "power": 2
-  },
-  "-2,-1": {
+  "2,-3": {
     "type": "jungle",
     "power": 1
   },
-  "-2,0": {
-    "type": "village",
+  "3,-3": {
+    "type": "river",
     "power": 1
-  },
-  "-2,1": {
-    "type": "camp",
-    "power": 1
-  },
-  "-2,2": {
-    "type": "camp",
-    "power": 1
-  },
-  "-2,3": {
-    "type": "rubble",
-    "power": 2
   },
   "-1,-2": {
-    "type": "village",
-    "power": 2
+    "type": "start",
+    "power": 0,
+    "isStart": 3
+  },
+  "0,-2": {
+    "type": "jungle",
+    "power": 1
+  },
+  "1,-2": {
+    "type": "jungle",
+    "power": 1
+  },
+  "2,-2": {
+    "type": "jungle",
+    "power": 1
+  },
+  "3,-2": {
+    "type": "jungle",
+    "power": 1
+  },
+  "-2,-1": {
+    "type": "start",
+    "power": 0,
+    "isStart": 2
   },
   "-1,-1": {
+    "type": "jungle",
+    "power": 1
+  },
+  "0,-1": {
+    "type": "river",
+    "power": 1
+  },
+  "1,-1": {
+    "type": "village",
+    "power": 1
+  },
+  "2,-1": {
+    "type": "village",
+    "power": 1
+  },
+  "3,-1": {
+    "type": "jungle",
+    "power": 1
+  },
+  "-3,0": {
+    "type": "start",
+    "power": 0,
+    "isStart": 1
+  },
+  "-2,0": {
     "type": "jungle",
     "power": 1
   },
@@ -47,104 +75,80 @@
     "type": "jungle",
     "power": 1
   },
-  "-1,1": {
-    "type": "river",
-    "power": 2
-  },
-  "-1,2": {
-    "type": "rubble",
-    "power": 2
-  },
-  "-1,3": {
-    "type": "rubble",
-    "power": 2
-  },
-  "0,-3": {
-    "type": "jungle",
-    "power": 3
-  },
-  "0,-2": {
-    "type": "jungle",
-    "power": 3
-  },
-  "0,-1": {
-    "type": "jungle",
-    "power": 3
-  },
   "0,0": {
     "type": "jungle",
-    "power": 3
-  },
-  "0,1": {
-    "type": "rubble",
-    "power": 2
-  },
-  "0,2": {
-    "type": "rubble",
-    "power": 2
-  },
-  "0,3": {
-    "type": "camp",
     "power": 1
-  },
-  "1,-3": {
-    "type": "jungle",
-    "power": 3
-  },
-  "1,-2": {
-    "type": "river",
-    "power": 2
-  },
-  "1,-1": {
-    "type": "rubble",
-    "power": 2
   },
   "1,0": {
-    "type": "rubble",
-    "power": 2
+    "type": "jungle",
+    "power": 1
+  },
+  "2,0": {
+    "type": "jungle",
+    "power": 1
+  },
+  "3,0": {
+    "type": "jungle",
+    "power": 1
+  },
+  "-3,1": {
+    "type": "jungle",
+    "power": 1
+  },
+  "-2,1": {
+    "type": "jungle",
+    "power": 1
+  },
+  "-1,1": {
+    "type": "village",
+    "power": 1
+  },
+  "0,1": {
+    "type": "jungle",
+    "power": 1
   },
   "1,1": {
-    "type": "camp",
+    "type": "village",
     "power": 1
+  },
+  "2,1": {
+    "type": "river",
+    "power": 1
+  },
+  "-3,2": {
+    "type": "jungle",
+    "power": 1
+  },
+  "-2,2": {
+    "type": "jungle",
+    "power": 1
+  },
+  "-1,2": {
+    "type": "jungle",
+    "power": 1
+  },
+  "0,2": {
+    "type": "mountain",
+    "power": 0
   },
   "1,2": {
     "type": "camp",
     "power": 1
   },
-  "2,-3": {
+  "-3,3": {
+    "type": "jungle",
+    "power": 1
+  },
+  "-2,3": {
+    "type": "jungle",
+    "power": 1
+  },
+  "-1,3": {
+    "type": "jungle",
+    "power": 1
+  },
+  "0,3": {
     "type": "river",
-    "power": 2
-  },
-  "2,-2": {
-    "type": "rubble",
-    "power": 2
-  },
-  "2,-1": {
-    "type": "camp",
-    "power": 1
-  },
-  "2,0": {
-    "type": "camp",
-    "power": 1
-  },
-  "2,1": {
-    "type": "camp",
-    "power": 1
-  },
-  "3,-3": {
-    "type": "camp",
-    "power": 1
-  },
-  "3,-2": {
-    "type": "camp",
-    "power": 1
-  },
-  "3,-1": {
-    "type": "camp",
-    "power": 1
-  },
-  "3,0": {
-    "type": "camp",
     "power": 1
   }
 }

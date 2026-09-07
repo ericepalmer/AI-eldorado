@@ -72,7 +72,7 @@ function occupiedSet(state: GameState, ignorePlayer: number): Set<string> {
 
 function finishIds(cells: Record<string, HexCell>): string[] {
   return Object.values(cells)
-    .filter((c) => c.type === 'finish')
+    .filter((c) => c.type === 'finish' || c.type === 'eldorado')
     .map((c) => c.id)
 }
 
@@ -82,7 +82,9 @@ export function enterCost(
   deck: DeckPower,
   occupied: Set<string>,
 ): number | null {
-  if (cell.type === 'mountain' || cell.type === 'eldorado') return null
+  if (cell.type === 'mountain') return null
+  // Gold city is entered free from a finish; treat as cheap goal for routing.
+  if (cell.type === 'eldorado') return occupied.has(cell.id) ? null : 0.01
   if (occupied.has(cell.id)) return null
 
   if (cell.type === 'start') return 0.05

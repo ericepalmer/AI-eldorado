@@ -75,22 +75,49 @@ function t(type: TerrainType, power = 1): Terr {
  */
 const TILE_TERRAIN: Record<'B' | 'C' | 'N' | 'I' | 'K', Record<string, Terr>> = {
   B: {
-    // Sampled from first-play reference (letter upright, pointy-top lattice).
-    // Left-edge yellow was diagram label bleed — not a village.
-    // 27 jungle + 4 river + 3 village + 1 mountain + 1 camp (+ 4 starts from jungle)
-    '2,-3': t('river', 1),
-    '0,-1': t('village', 1),
+    // From reference-board detection; starts numbered top→bottom 4..1.
+    // Counts: {'start': 4, 'jungle': 23, 'river': 4, 'village': 4, 'mountain': 1, 'camp': 1}
+    '0,-3': { type: 'jungle', power: 1, isStart: 4 },
+    '1,-3': t('jungle', 1),
+    '2,-3': t('jungle', 1),
+    '3,-3': t('river', 1),
+    '-1,-2': { type: 'jungle', power: 1, isStart: 3 },
+    '0,-2': t('jungle', 1),
+    '1,-2': t('jungle', 1),
+    '2,-2': t('jungle', 1),
+    '3,-2': t('jungle', 1),
+    '-2,-1': { type: 'jungle', power: 1, isStart: 2 },
+    '-1,-1': t('jungle', 1),
+    '0,-1': t('river', 1),
+    '1,-1': t('village', 1),
     '2,-1': t('village', 1),
-    '-2,0': t('river', 1),
+    '3,-1': t('jungle', 1),
+    '-3,0': { type: 'jungle', power: 1, isStart: 1 },
+    '-2,0': t('jungle', 1),
+    '-1,0': t('jungle', 1),
+    '0,0': t('jungle', 1),
+    '1,0': t('jungle', 1),
+    '2,0': t('jungle', 1),
+    '3,0': t('jungle', 1),
+    '-3,1': t('jungle', 1),
+    '-2,1': t('jungle', 1),
+    '-1,1': t('village', 1),
+    '0,1': t('jungle', 1),
+    '1,1': t('village', 1),
     '2,1': t('river', 1),
-    '1,2': t('river', 1),
-    '0,2': t('village', 1),
-    '-1,3': t('mountain', 0),
-    '0,3': t('camp', 1),
+    '-3,2': t('jungle', 1),
+    '-2,2': t('jungle', 1),
+    '-1,2': t('jungle', 1),
+    '0,2': t('mountain', 0),
+    '1,2': t('camp', 1),
+    '-3,3': t('jungle', 1),
+    '-2,3': t('jungle', 1),
+    '-1,3': t('jungle', 1),
+    '0,3': t('river', 1),
   },
   C: {
-    // From reference-board orthophoto (leveled ~13° CW), axial lattice with mountain at 0,0.
-    // Colors corrected with (1,2)=jungle. Counts: 6 jungle, 12 river, 9 village, 9 rubble, 1 mountain.
+    // From reference-board detection.
+    // Counts: {'jungle': 6, 'river': 12, 'village': 9, 'rubble': 9, 'mountain': 1}
     '0,-3': t('rubble', 2),
     '1,-3': t('river', 2),
     '2,-3': t('river', 2),
@@ -130,117 +157,127 @@ const TILE_TERRAIN: Record<'B' | 'C' | 'N' | 'I' | 'K', Record<string, Terr>> = 
     '0,3': t('jungle', 1),
   },
   N: {
-    '0,-3': t('jungle', 1),
-    '1,-3': t('jungle', 1),
+    // From reference-board detection (P4 lattice base; NW/SE barriers ignored).
+    // Counts: {'jungle': 17, 'village': 10, 'river': 10}
+    '0,-3': t('jungle', 3),
+    '1,-3': t('river', 2),
     '2,-3': t('river', 1),
-    '3,-3': t('river', 1),
-    '-1,-2': t('jungle', 1),
-    '0,-2': t('jungle', 2),
-    '1,-2': t('river', 2),
-    '2,-2': t('river', 2),
-    '3,-2': t('river', 2),
-    '-2,-1': t('jungle', 1),
-    '-1,-1': t('jungle', 2),
-    '0,-1': t('river', 2),
-    '1,-1': t('river', 3),
-    '2,-1': t('river', 2),
-    '3,-1': t('river', 1),
+    '3,-3': t('village', 1),
+    '-1,-2': t('jungle', 3),
+    '0,-2': t('river', 2),
+    '1,-2': t('village', 1),
+    '2,-2': t('village', 1),
+    '3,-2': t('village', 1),
+    '-2,-1': t('jungle', 3),
+    '-1,-1': t('jungle', 3),
+    '0,-1': t('village', 2),
+    '1,-1': t('jungle', 3),
+    '2,-1': t('jungle', 3),
+    '3,-1': t('jungle', 3),
+    '-3,0': t('jungle', 3),
+    '-2,0': t('village', 2),
+    '-1,0': t('village', 2),
+    '0,0': t('river', 1),
+    '1,0': t('jungle', 3),
+    '2,0': t('jungle', 3),
+    '3,0': t('river', 1),
+    '-3,1': t('village', 2),
+    '-2,1': t('village', 1),
+    '-1,1': t('river', 1),
+    '0,1': t('jungle', 3),
+    '1,1': t('jungle', 3),
+    '2,1': t('river', 1),
+    '-3,2': t('village', 1),
+    '-2,2': t('river', 1),
+    '-1,2': t('river', 1),
+    '0,2': t('jungle', 3),
+    '1,2': t('river', 1),
+    '-3,3': t('jungle', 1),
+    '-2,3': t('jungle', 1),
+    '-1,3': t('jungle', 1),
+    '0,3': t('jungle', 3),
+  },
+  I: {
+    // From reference-board detection.
+    // Counts: {'river': 6, 'village': 6, 'rubble': 1, 'mountain': 6, 'jungle': 17, 'camp': 1}
+    '0,-3': t('river', 1),
+    '1,-3': t('river', 1),
+    '2,-3': t('village', 1),
+    '3,-3': t('village', 1),
+    '-1,-2': t('river', 1),
+    '0,-2': t('river', 1),
+    '1,-2': t('rubble', 3),
+    '2,-2': t('village', 1),
+    '3,-2': t('village', 1),
+    '-2,-1': t('river', 1),
+    '-1,-1': t('river', 1),
+    '0,-1': t('mountain', 0),
+    '1,-1': t('jungle', 1),
+    '2,-1': t('village', 1),
+    '3,-1': t('village', 1),
     '-3,0': t('jungle', 1),
-    '-2,0': t('jungle', 2),
-    '-1,0': t('jungle', 1),
-    '0,0': t('village', 2),
-    '1,0': t('village', 1),
-    '2,0': t('jungle', 2),
+    '-2,0': t('jungle', 1),
+    '-1,0': t('mountain', 0),
+    '0,0': t('jungle', 1),
+    '1,0': t('jungle', 1),
+    '2,0': t('jungle', 1),
     '3,0': t('jungle', 1),
     '-3,1': t('jungle', 1),
     '-2,1': t('jungle', 1),
-    '-1,1': t('village', 1),
-    '0,1': t('village', 2),
-    '1,1': t('village', 3),
-    '2,1': t('jungle', 3),
-    '-3,2': t('village', 1),
-    '-2,2': t('village', 1),
-    '-1,2': t('village', 2),
-    '0,2': t('village', 3),
-    '1,2': t('jungle', 2),
-    '-2,3': t('village', 2),
-    '-1,3': t('jungle', 1),
-    '0,3': t('river', 1),
-  },
-  I: {
-    '0,-3': t('jungle', 1),
-    '1,-3': t('village', 1),
-    '2,-3': t('village', 2),
-    '3,-3': t('village', 1),
-    '-1,-2': t('river', 1),
-    '0,-2': t('jungle', 2),
-    '1,-2': t('village', 1),
-    '2,-2': t('village', 1),
-    '3,-2': t('village', 2),
-    '-2,-1': t('river', 2),
-    '0,-1': t('mountain', 0),
-    '1,-1': t('mountain', 0),
-    '2,-1': t('jungle', 1),
-    '3,-1': t('jungle', 1),
-    '-3,0': t('river', 1),
-    '-2,0': t('jungle', 1),
-    '-1,0': t('mountain', 0),
-    '0,0': t('mountain', 0),
-    '1,0': t('mountain', 0),
-    '2,0': t('jungle', 2),
-    '3,0': t('jungle', 2),
-    '-3,1': t('jungle', 1),
-    '-2,1': t('jungle', 2),
-    '-1,1': t('camp', 1),
+    '-1,1': t('camp', 3),
     '0,1': t('mountain', 0),
-    '1,1': t('jungle', 2),
-    '2,1': t('jungle', 3),
+    '1,1': t('mountain', 0),
+    '2,1': t('jungle', 1),
     '-3,2': t('jungle', 1),
-    '-2,2': t('jungle', 1),
-    '-1,2': t('jungle', 2),
-    '0,2': t('rubble', 3),
+    '-2,2': t('mountain', 0),
+    '-1,2': t('jungle', 1),
+    '0,2': t('jungle', 1),
     '1,2': t('jungle', 1),
+    '-3,3': t('mountain', 0),
     '-2,3': t('jungle', 1),
-    '-1,3': t('jungle', 2),
+    '-1,3': t('jungle', 1),
     '0,3': t('jungle', 1),
   },
   K: {
-    '1,2': t('camp', 1),
-    '0,-3': t('jungle', 1),
-    '1,-3': t('river', 1),
-    '2,-3': t('jungle', 1),
+    // From reference-board detection.
+    // Counts: {'camp': 2, 'jungle': 33, 'river': 1, 'village': 1}
+    '0,-3': t('camp', 1),
+    '1,-3': t('jungle', 2),
+    '2,-3': t('jungle', 2),
     '3,-3': t('jungle', 1),
-    '-1,-2': t('jungle', 2),
+    '-1,-2': t('jungle', 1),
     '0,-2': t('jungle', 2),
-    '1,-2': t('jungle', 2),
-    '2,-2': t('jungle', 2),
-    '3,-2': t('jungle', 1),
-    '-2,-1': t('jungle', 2),
-    '-1,-1': t('jungle', 3),
-    '0,-1': t('jungle', 3),
+    '1,-2': t('river', 3),
+    '2,-2': t('jungle', 1),
+    '3,-2': t('jungle', 2),
+    '-2,-1': t('jungle', 1),
+    '-1,-1': t('jungle', 2),
+    '0,-1': t('jungle', 1),
     '1,-1': t('jungle', 3),
     '2,-1': t('jungle', 1),
     '3,-1': t('jungle', 2),
-    '-3,0': t('jungle', 1),
+    '-3,0': t('jungle', 2),
     '-2,0': t('jungle', 1),
-    '-1,0': t('jungle', 2),
-    '0,0': t('jungle', 2),
-    '1,0': t('jungle', 2),
-    '2,0': t('jungle', 2),
-    '3,0': t('jungle', 1),
-    '-3,1': t('camp', 1),
-    '-2,1': t('jungle', 2),
-    '-1,1': t('jungle', 1),
-    '0,1': t('jungle', 3),
-    '1,1': t('jungle', 1),
-    '2,1': t('village', 3),
-    '-3,2': t('jungle', 1),
+    '-1,0': t('jungle', 3),
+    '0,0': t('jungle', 1),
+    '1,0': t('jungle', 3),
+    '2,0': t('jungle', 1),
+    '3,0': t('jungle', 2),
+    '-3,1': t('jungle', 2),
+    '-2,1': t('jungle', 1),
+    '-1,1': t('jungle', 3),
+    '0,1': t('jungle', 1),
+    '1,1': t('jungle', 2),
+    '2,1': t('jungle', 1),
+    '-3,2': t('jungle', 2),
     '-2,2': t('jungle', 1),
-    '-1,2': t('jungle', 2),
-    '0,2': t('jungle', 2),
-    '-2,3': t('jungle', 1),
-    '-1,3': t('jungle', 1),
-    '0,3': t('jungle', 1),
+    '-1,2': t('village', 4),
+    '0,2': t('jungle', 1),
+    '1,2': t('jungle', 1),
+    '-3,3': t('jungle', 1),
+    '-2,3': t('jungle', 2),
+    '-1,3': t('jungle', 2),
+    '0,3': t('camp', 1),
   },
 }
 
@@ -269,21 +306,22 @@ export const FIRST_PLAY_ORDER: TerrainTileId[] = ['B', 'C', 'N', 'I', 'K']
 /** Default rotations (60° steps) from BoardGameHelpers MapViewer. */
 export const DEFAULT_TILE_ROT: Record<PlaceableTileId, number> = {
   B: 0,
-  C: 5,
-  N: 2,
-  I: 2,
+  C: 0, // CW one face from 5
+  N: 0, // CCW two faces from 2
+  I: 0, // CW two faces from 4
   K: 0,
-  E: 0,
+  E: 1, // face-aligned + 1 CW → water row toward K, gold outward
 }
 
 /**
- * Connection faces for the standard zigzag (from prior tile → next):
- * B→C ENE, C→N S, N→I S, I→K ENE, K→E ENE
+ * Connection faces for the standard zigzag (from prior tile → next),
+ * matching the rulebook first-play diagram:
+ * B→C ENE, C→N SE, N→I SE, I→K ENE, K→E NNE (goal on K’s top-right)
  *
  * Faces index the flat sides of a radius-3 hex (0..5). Neighbor centers use
  * TILE_FACE_OFFSETS so tiles fully abut along a 4-hex edge.
  */
-export const FIRST_PLAY_LINK_FACES = [0, 4, 4, 0, 0] as const
+export const FIRST_PLAY_LINK_FACES = [0, 5, 5, 0, 1] as const
 
 /**
  * Center offset to place a neighboring large tile flush against `face`
@@ -303,11 +341,13 @@ export const TILE_STEP = 7
 
 /**
  * Point-attach offsets for ending tile E from a large-tile face.
- * Local (0,0) is the middle finish; face-0 offset is [3,-1], others rotate with the face.
+ * Local (0,0) is the middle finish; face-0 offset is [3,-1].
+ * Face indices match TILE_FACE_OFFSETS (CW around the large hex), so the
+ * attach vector is rotated CCW from face 0 (= rotateQr times (6-face)%6).
  */
 const END_ORIGIN_FACE0: [number, number] = [3, -1]
 const END_FACE_OFFSETS: [number, number][] = [0, 1, 2, 3, 4, 5].map(
-  (face) => rotateQr(END_ORIGIN_FACE0[0], END_ORIGIN_FACE0[1], face),
+  (face) => rotateQr(END_ORIGIN_FACE0[0], END_ORIGIN_FACE0[1], (6 - face) % 6),
 )
 
 export interface TilePlacement {
@@ -325,17 +365,18 @@ export function newPlacementId(): string {
 }
 
 /**
- * Ending tile: 3 water finishes in an edge arc (not a 2+1 cluster), each with an
- * El Dorado hex behind it so every approach can park on gold.
- * Oriented for approach from the west; rotate with attach face when placing.
+ * Ending tile (from tile-E art): horizontal water finishes (paddle 1/2/1),
+ * gold El Dorado hexes on the city side behind them. Local “up” is −r (gold).
  */
 const END_TERRAIN: Record<string, Terr> = {
-  '1,1': t('finish', 1),
-  '0,0': t('finish', 1),
-  '-1,-1': t('finish', 1),
-  '2,1': t('eldorado', 0),
-  '1,0': t('eldorado', 0),
+  // Water finishes — horizontal approach row
+  '-1,0': t('finish', 1),
+  '0,0': t('finish', 2),
+  '1,0': t('finish', 1),
+  // Gold city — one hex behind each finish (toward −r)
+  '-1,-1': t('eldorado', 0),
   '0,-1': t('eldorado', 0),
+  '1,-1': t('eldorado', 0),
 }
 
 function terrainFor(tile: PlaceableTileId): Record<string, Terr> {
@@ -368,8 +409,11 @@ export function firstPlayPlacements(): TilePlacement[] {
       tile,
       q: prev.q + dq,
       r: prev.r + dr,
-      // Ending faces the attach direction; other tiles use printed upright defaults.
-      rot: tile === 'E' ? face : DEFAULT_TILE_ROT[tile],
+      // Ending faces the attach edge, plus DEFAULT_TILE_ROT.E (CW steps).
+      rot:
+        tile === 'E'
+          ? ((6 - face) + DEFAULT_TILE_ROT.E) % 6
+          : DEFAULT_TILE_ROT[tile],
     })
   }
   return out
@@ -394,7 +438,7 @@ export function placeNewPiece(
       tile,
       q: prev.q + dq,
       r: prev.r + dr,
-      rot: tile === 'E' ? face : rot,
+      rot: tile === 'E' ? ((6 - face) + DEFAULT_TILE_ROT.E) % 6 : rot,
     },
   ]
 }
@@ -432,16 +476,18 @@ function cell(
 }
 
 const FIRST_PLAY_BLOCKADES: {
-  from: TerrainTileId
-  to: TerrainTileId
+  from: PlaceableTileId
+  to: PlaceableTileId
   symbols: TerrainSymbol | 'any'
   power: number
   id: number
 }[] = [
-  { from: 'B', to: 'C', symbols: 'machete', power: 1, id: 1 },
-  { from: 'C', to: 'N', symbols: 'any', power: 1, id: 3 },
-  { from: 'N', to: 'I', symbols: 'coin', power: 1, id: 2 },
-  { from: 'I', to: 'K', symbols: 'paddle', power: 1, id: 4 },
+  // Example faces from first-play setup art (rulebook shuffles randomly).
+  { from: 'B', to: 'C', symbols: 'any', power: 1, id: 1 },
+  { from: 'C', to: 'N', symbols: 'machete', power: 2, id: 2 },
+  { from: 'N', to: 'I', symbols: 'paddle', power: 2, id: 3 },
+  { from: 'I', to: 'K', symbols: 'coin', power: 1, id: 4 },
+  { from: 'K', to: 'E', symbols: 'paddle', power: 3, id: 5 },
 ]
 
 export interface AssembleOptions {
@@ -485,9 +531,7 @@ export function assembleBoard(
     for (let i = 0; i < placements.length - 1; i++) {
       const a = placements[i]
       const b = placements[i + 1]
-      if (a.tile === 'E' || b.tile === 'E') continue
-      if (!ALL_TERRAIN_TILES.includes(a.tile as TerrainTileId)) continue
-      if (!ALL_TERRAIN_TILES.includes(b.tile as TerrainTileId)) continue
+      if (a.tile === 'E') continue
       const spec =
         FIRST_PLAY_BLOCKADES.find((s) => s.from === a.tile && s.to === b.tile) ?? {
           symbols: 'any' as const,
@@ -501,48 +545,59 @@ export function assembleBoard(
   // Starts on the first B piece’s northwest edge
   const bPlace = placements.find((p) => p.tile === 'B')
   if (bPlace) {
-    for (const c of Object.values(cells)) {
-      if (c.isStart != null) {
-        delete c.isStart
-        if (c.type === 'start') {
-          c.type = 'jungle'
-          c.power = 1
+    const fromTerrain = Object.values(cells).filter(
+      (c) => c.pieceId === bPlace.id && c.isStart != null,
+    )
+    if (fromTerrain.length >= 4) {
+      // Prefer explicit start numbers from tile data (reference layout).
+      for (const c of fromTerrain) {
+        c.type = 'start'
+        c.power = 0
+      }
+    } else {
+      for (const c of Object.values(cells)) {
+        if (c.isStart != null) {
+          delete c.isStart
+          if (c.type === 'start') {
+            c.type = 'jungle'
+            c.power = 1
+          }
         }
       }
-    }
-    // Four NW-edge hexes on B, numbered top→bottom (official starts 1–4).
-    // Prefer the face whose average pixel sits furthest northwest (low x + low y).
-    let bestDir = 2
-    let bestScore = Infinity
-    for (let d = 0; d < 6; d++) {
-      const edge = edgeLocals(3, d)
+      // Four NW-edge hexes on B, numbered top→bottom (official starts 1–4).
+      // Prefer the face whose average pixel sits furthest northwest (low x + low y).
+      let bestDir = 2
+      let bestScore = Infinity
+      for (let d = 0; d < 6; d++) {
+        const edge = edgeLocals(3, d)
+          .map(([lq, lr]) => {
+            const [rq, rr] = rotateQr(lq, lr, bPlace.rot)
+            return cells[hexKey(bPlace.q + rq, bPlace.r + rr)]
+          })
+          .filter((c): c is HexCell => Boolean(c && c.pieceId === bPlace.id))
+        if (edge.length < 4) continue
+        const avgX = edge.reduce((s, c) => s + hexToPixel(c.q, c.r, 1).x, 0) / edge.length
+        const avgY = edge.reduce((s, c) => s + hexToPixel(c.q, c.r, 1).y, 0) / edge.length
+        const score = avgX + avgY
+        if (score < bestScore) {
+          bestScore = score
+          bestDir = d
+        }
+      }
+      const faceHexes = edgeLocals(3, bestDir)
         .map(([lq, lr]) => {
           const [rq, rr] = rotateQr(lq, lr, bPlace.rot)
           return cells[hexKey(bPlace.q + rq, bPlace.r + rr)]
         })
         .filter((c): c is HexCell => Boolean(c && c.pieceId === bPlace.id))
-      if (edge.length < 4) continue
-      const avgX = edge.reduce((s, c) => s + hexToPixel(c.q, c.r, 1).x, 0) / edge.length
-      const avgY = edge.reduce((s, c) => s + hexToPixel(c.q, c.r, 1).y, 0) / edge.length
-      const score = avgX + avgY
-      if (score < bestScore) {
-        bestScore = score
-        bestDir = d
-      }
-    }
-    const faceHexes = edgeLocals(3, bestDir)
-      .map(([lq, lr]) => {
-        const [rq, rr] = rotateQr(lq, lr, bPlace.rot)
-        return cells[hexKey(bPlace.q + rq, bPlace.r + rr)]
-      })
-      .filter((c): c is HexCell => Boolean(c && c.pieceId === bPlace.id))
-      .sort((a, b) => hexToPixel(a.q, a.r, 1).y - hexToPixel(b.q, b.r, 1).y)
+        .sort((a, b) => hexToPixel(a.q, a.r, 1).y - hexToPixel(b.q, b.r, 1).y)
 
-    faceHexes.slice(0, 4).forEach((c, i) => {
-      c.type = 'start'
-      c.power = 0
-      c.isStart = i + 1
-    })
+      faceHexes.slice(0, 4).forEach((c, i) => {
+        c.type = 'start'
+        c.power = 0
+        c.isStart = i + 1
+      })
+    }
   }
 
   return cells
@@ -774,10 +829,15 @@ export function startPositions(cells: Record<string, HexCell>): string[] {
     .map((c) => c.id)
 }
 
-/** Prefer the El Dorado hex adjacent to the finish you just claimed. */
+/**
+ * Prefer the El Dorado hex adjacent to the finish you just left.
+ */
 export function eldoradoId(cells: Record<string, HexCell>, fromFinishId?: string): string {
   const golds = Object.values(cells).filter((c) => c.type === 'eldorado')
-  if (golds.length === 0) return '0,0'
+  if (golds.length === 0) {
+    const finishes = Object.values(cells).filter((c) => c.type === 'finish')
+    return finishes[0]?.id ?? fromFinishId ?? '0,0'
+  }
   if (fromFinishId) {
     const [q, r] = fromFinishId.split(',').map(Number)
     const near = golds.find((g) =>
