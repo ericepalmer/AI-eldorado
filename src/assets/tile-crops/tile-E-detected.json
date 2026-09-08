@@ -2,10 +2,11 @@
   "axial": {
     "-1,0": { "type": "finish", "power": 1 },
     "0,0": { "type": "finish", "power": 2 },
-    "1,0": { "type": "finish", "power": 1 },
+    "0,1": { "type": "finish", "power": 1 },
     "-1,-1": { "type": "eldorado", "power": 0 },
     "0,-1": { "type": "eldorado", "power": 0 },
-    "1,-1": { "type": "eldorado", "power": 0 }
+    "1,-1": { "type": "eldorado", "power": 0 },
+    "1,0": { "type": "eldorado", "power": 0 }
   },
-  "note": "Horizontal water row + gold behind (toward city). Place on K NNE with E rot offset 1."
+  "note": "3 water finishes wrapping NE tip; 4 connected gold win hexes past the arc."
 }

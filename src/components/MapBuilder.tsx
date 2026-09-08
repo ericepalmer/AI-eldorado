@@ -136,6 +136,7 @@ export function MapBuilder({ aiCount, onBack, onPlay }: Props) {
               highlights={[]}
               onCellClick={onCellClick}
               selectedPieceId={selectedId}
+              showTileLetters
             />
           )}
         </section>

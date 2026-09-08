@@ -290,6 +290,13 @@ export default function App() {
         </section>
 
         <aside className="side-panel">
+          {isHumanTurn && state.phase === 'play' && state.playMode === 'idle' && !specialMode && (
+            <div className="side-panel-pin">
+              <button type="button" className="cta end-turn-pin" onClick={endHumanPlay}>
+                End turn
+              </button>
+            </div>
+          )}
           <div className="side-panel-body">
           <div className="side-tools">
             <div className="status compact">
@@ -302,19 +309,11 @@ export default function App() {
               ) : (
                 <>
                   <span className="turn-pip" style={{ background: me?.color }} />
-                  {me?.name}&apos;s turn
+                  {me?.isHuman ? 'Your turn' : `${me?.name}'s turn`}
                   {busy && ' · thinking…'}
                   {state.finalRoundTriggered && ' · final'}
                 </>
               )}
-            </div>
-            <div className="top-actions">
-              <button type="button" className="ghost" onClick={() => setShowRules(true)}>
-                Rules
-              </button>
-              <button type="button" className="ghost" onClick={() => setScreen('title')}>
-                New
-              </button>
             </div>
           </div>
 
@@ -329,7 +328,7 @@ export default function App() {
                   Hire
                 </button>
                 <button type="button" onClick={() => setSpecialMode(true)}>
-                  Grey
+                  Grey/Red
                 </button>
               </div>
             )}
@@ -427,14 +426,6 @@ export default function App() {
                       : 'move'
               }
             />
-
-            {isHumanTurn && state.phase === 'play' && state.playMode === 'idle' && !specialMode && (
-              <div className="actions">
-                <button type="button" className="cta" onClick={endHumanPlay}>
-                  End turn
-                </button>
-              </div>
-            )}
           </div>
 
           <Market
@@ -477,6 +468,15 @@ export default function App() {
               {state.log.slice(0, 6).map((line, i) => (
                 <div key={`${line}-${i}`}>{line}</div>
               ))}
+            </div>
+
+            <div className="side-foot-actions">
+              <button type="button" className="ghost" onClick={() => setShowRules(true)}>
+                Rules
+              </button>
+              <button type="button" className="ghost" onClick={() => setScreen('title')}>
+                New
+              </button>
             </div>
           </div>
           </div>

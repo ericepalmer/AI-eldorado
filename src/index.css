@@ -45,7 +45,7 @@ button {
   background: rgba(231, 217, 184, 0.08);
   color: var(--parchment);
   border-radius: 8px;
-  padding: 0.55rem 0.9rem;
+  padding: 0.4rem 0.65rem;
   transition: background 0.2s, transform 0.15s, border-color 0.2s;
 }
 
@@ -267,9 +267,9 @@ h3,
 
 .layout {
   display: grid;
-  grid-template-columns: 1fr minmax(280px, 340px);
-  gap: 0.75rem;
-  padding: 0.75rem;
+  grid-template-columns: 1fr minmax(150px, 168px);
+  gap: 0.4rem;
+  padding: 0.4rem;
   flex: 1;
   min-height: 0;
 }
@@ -279,22 +279,16 @@ h3,
   overflow: hidden;
 }
 
-@media (max-width: 900px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-}
-
 .map-panel {
   background: var(--panel);
   border: 1px solid rgba(224, 179, 58, 0.18);
-  border-radius: 16px;
-  padding: 0.75rem;
+  border-radius: 12px;
+  padding: 0.4rem;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.35rem;
   min-height: 0;
-  max-height: calc(100vh - 1.5rem);
+  max-height: calc(100vh - 0.8rem);
   overflow: hidden;
 }
 
@@ -362,15 +356,17 @@ h3,
 }
 
 .hex-hi polygon {
-  animation: glow 1.2s ease-in-out infinite alternate;
+  stroke: #ffe08a;
+  paint-order: stroke fill;
+  animation: outline-pulse 1.2s ease-in-out infinite alternate;
 }
 
-@keyframes glow {
+@keyframes outline-pulse {
   from {
-    filter: brightness(1);
+    stroke-opacity: 0.75;
   }
   to {
-    filter: brightness(1.2);
+    stroke-opacity: 1;
   }
 }
 
@@ -379,8 +375,19 @@ h3,
   display: flex;
   flex-direction: column;
   min-height: 0;
-  max-height: calc(100vh - 1.5rem);
+  max-height: calc(100vh - 0.8rem);
   overflow: hidden;
+}
+
+.side-panel-pin {
+  flex-shrink: 0;
+  padding-bottom: 0.3rem;
+}
+
+.side-panel-pin .end-turn-pin {
+  width: 100%;
+  padding: 0.35rem 0.4rem;
+  font-size: 0.8rem;
 }
 
 .side-panel-body {
@@ -389,13 +396,13 @@ h3,
   overflow: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 0.35rem;
 }
 
 .side-tools {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 0.5rem;
   flex-shrink: 0;
 }
@@ -403,14 +410,14 @@ h3,
 .side-tools .status.compact {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  font-size: 0.85rem;
+  gap: 0.3rem;
+  font-size: 0.75rem;
   min-width: 0;
 }
 
 .side-tools .top-actions button {
-  padding: 0.35rem 0.55rem;
-  font-size: 0.8rem;
+  padding: 0.25rem 0.4rem;
+  font-size: 0.72rem;
 }
 
 .players {
@@ -424,10 +431,10 @@ h3,
 .player-row {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: 0.5rem;
+  gap: 0.3rem;
   align-items: center;
-  padding: 0.25rem 0;
-  font-size: 0.85rem;
+  padding: 0.15rem 0;
+  font-size: 0.75rem;
 }
 
 .player-row.active {
@@ -441,23 +448,23 @@ h3,
 
 .market {
   background: var(--panel);
-  border-radius: 12px;
+  border-radius: 10px;
   border: 1px solid rgba(224, 179, 58, 0.15);
-  padding: 0.75rem;
+  padding: 0.35rem;
   flex-shrink: 0;
   overflow: visible;
 }
 
 .market h3 {
-  margin: 0 0 0.5rem;
-  font-size: 1.1rem;
+  margin: 0 0 0.3rem;
+  font-size: 0.9rem;
   color: var(--gold);
 }
 
 .market-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.4rem;
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
 }
 
 .market-grid.compact {
@@ -468,11 +475,11 @@ h3,
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0.2rem;
-  padding: 0.45rem 0.55rem;
+  gap: 0.1rem;
+  padding: 0.3rem 0.35rem;
   border-left-width: 3px;
   text-align: left;
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   background: rgba(0, 0, 0, 0.25);
   position: relative;
 }
@@ -513,11 +520,11 @@ h3,
 .market-card-detail {
   display: flex;
   align-items: baseline;
-  gap: 0.35rem;
+  gap: 0.25rem;
   min-width: 0;
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   opacity: 0.8;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 .market-card-cost {
@@ -532,12 +539,12 @@ h3,
 
 .play-rail {
   background: var(--panel);
-  border-radius: 12px;
+  border-radius: 10px;
   border: 1px solid rgba(224, 179, 58, 0.15);
-  padding: 0.75rem;
+  padding: 0.35rem;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.3rem;
   flex-shrink: 0;
 }
 
@@ -548,7 +555,7 @@ h3,
 .play-rail .actions {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.25rem;
 }
 
 .play-rail .actions button {
@@ -556,21 +563,22 @@ h3,
 }
 
 .play-rail .actions-row {
-  flex-direction: row;
-  gap: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .play-rail .actions-row button {
   flex: 1;
   width: auto;
-  padding: 0.4rem 0.55rem;
-  font-size: 0.82rem;
+  padding: 0.28rem 0.4rem;
+  font-size: 0.72rem;
 }
 
 .play-rail .hand {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.45rem;
+  grid-template-columns: 1fr;
+  gap: 0.22rem;
   overflow: visible;
   padding-bottom: 0;
 }
@@ -578,25 +586,55 @@ h3,
 .play-rail .expedition-card {
   flex: unset;
   width: 100%;
-  min-height: 72px;
-  padding: 0.5rem;
+  min-height: 40px;
+  padding: 0.2rem 0.25rem;
   justify-content: center;
-  gap: 0.25rem;
+  gap: 0.1rem;
+  background: linear-gradient(165deg, #2f4a38, #1e3326);
+  border-radius: 8px;
 }
 
 .play-rail .card-name {
-  font-size: 0.95rem;
-}
-
-.play-rail .card-desc {
   font-size: 0.68rem;
 }
 
+.play-rail .card-desc {
+  font-size: 0.55rem;
+}
+
+.play-rail .card-power {
+  font-size: 0.75rem;
+}
+
+.play-rail .card-power .pwr {
+  font-size: 0.82rem;
+}
+
+.play-rail .expedition-card:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.play-rail .expedition-card.selected {
+  transform: translateY(-2px);
+}
+
 .log {
-  font-size: 0.78rem;
+  font-size: 0.55rem;
   opacity: 0.75;
-  padding: 0.25rem 0 0;
+  padding: 0.15rem 0 0;
   border-top: 1px solid rgba(224, 179, 58, 0.12);
+}
+
+.side-foot-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.3rem;
+  padding-top: 0.25rem;
+}
+
+.side-foot-actions button {
+  padding: 0.25rem 0.4rem;
+  font-size: 0.72rem;
 }
 
 .log div {
@@ -607,11 +645,11 @@ h3,
 .dock {
   background: rgba(8, 18, 12, 0.92);
   border: 1px solid rgba(224, 179, 58, 0.22);
-  border-radius: 12px;
-  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  padding: 0.35rem 0.4rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.3rem;
   flex-shrink: 0;
 }
 
@@ -622,9 +660,9 @@ h3,
 .prompt {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.3rem;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 0.72rem;
   color: var(--gold-bright);
 }
 
@@ -847,16 +885,125 @@ h3,
 .side-panel > .modal-backdrop {
   position: absolute;
   inset: 0;
-  border-radius: 12px;
-  place-items: center;
-  align-content: center;
-  padding: 0.75rem;
+  border-radius: 10px;
+  place-items: stretch;
+  align-content: stretch;
+  padding: 0.3rem;
 }
 
 .side-panel > .modal-backdrop .modal {
   max-width: 100%;
   width: 100%;
-  max-height: calc(100% - 0.5rem);
+  max-height: 100%;
+  margin: 0;
+  padding: 0.45rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  line-height: 1.3;
+}
+
+.side-panel > .modal-backdrop .modal h2 {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.side-panel > .modal-backdrop .modal p {
+  margin: 0 0 0.4rem;
+}
+
+.side-panel > .modal-backdrop .modal ul {
+  margin: 0.25rem 0 0.45rem;
+  padding-left: 0.9rem;
+}
+
+.side-panel > .modal-backdrop .modal .fine {
+  font-size: 0.62rem;
+}
+
+.side-panel > .modal-backdrop .modal button {
+  padding: 0.28rem 0.4rem;
+  font-size: 0.72rem;
+}
+
+.side-panel > .modal-backdrop .joker-dialog,
+.side-panel > .modal-backdrop .keep-dialog,
+.side-panel > .modal-backdrop .win-dialog {
+  width: 100%;
+  padding: 0.45rem 0.5rem;
+}
+
+.side-panel > .modal-backdrop .joker-dialog-lead {
+  margin: 0 0 0.4rem;
+  font-size: 0.68rem;
+}
+
+.side-panel > .modal-backdrop .joker-options {
+  gap: 0.3rem;
+}
+
+.side-panel > .modal-backdrop .joker-option {
+  gap: 0.35rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: 8px;
+  border-width: 1.5px;
+}
+
+.side-panel > .modal-backdrop .joker-glyph {
+  font-size: 0.95rem;
+  width: 1.1rem;
+}
+
+.side-panel > .modal-backdrop .joker-label {
+  font-size: 0.82rem;
+}
+
+.side-panel > .modal-backdrop .joker-power {
+  font-size: 0.85rem;
+}
+
+.side-panel > .modal-backdrop .joker-cancel {
+  margin-top: 0.4rem;
+}
+
+.side-panel > .modal-backdrop .keep-dialog .hand {
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
+  padding: 0.15rem 0 0.4rem;
+}
+
+.side-panel > .modal-backdrop .keep-dialog .expedition-card {
+  min-height: 40px;
+  padding: 0.25rem 0.3rem;
+}
+
+.side-panel > .modal-backdrop .keep-dialog .card-name {
+  font-size: 0.68rem;
+}
+
+.side-panel > .modal-backdrop .keep-dialog-meta {
+  margin: 0 0 0.35rem;
+  font-size: 0.65rem;
+}
+
+.side-panel > .modal-backdrop .win-dialog {
+  padding: 0.55rem 0.5rem;
+}
+
+.side-panel > .modal-backdrop .win-eyebrow {
+  margin: 0 0 0.2rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+}
+
+.side-panel > .modal-backdrop .win-dialog h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.side-panel > .modal-backdrop .win-actions {
+  gap: 0.3rem;
+  margin-top: 0.55rem;
 }
 
 @keyframes fade {

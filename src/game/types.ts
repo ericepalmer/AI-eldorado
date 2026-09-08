@@ -47,6 +47,9 @@ export interface HexCell {
   tile: string
   /** Builder instance id (duplicates share a letter but different pieceId). */
   pieceId?: string
+  /** Local axial coords on the printed tile (before placement rotate/offset). */
+  localQ?: number
+  localR?: number
   isStart?: number
   blockade?: { symbols: TerrainSymbol | 'any'; power: number; id: number } | null
 }

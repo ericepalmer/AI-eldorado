@@ -1,7 +1,7 @@
 {
   "-3,0": {
     "type": "jungle",
-    "power": 3
+    "power": 1
   },
   "-3,1": {
     "type": "village",
@@ -17,7 +17,7 @@
   },
   "-2,-1": {
     "type": "jungle",
-    "power": 3
+    "power": 1
   },
   "-2,0": {
     "type": "village",
@@ -37,11 +37,11 @@
   },
   "-1,-2": {
     "type": "jungle",
-    "power": 3
+    "power": 2
   },
   "-1,-1": {
     "type": "jungle",
-    "power": 3
+    "power": 1
   },
   "-1,0": {
     "type": "village",
@@ -61,11 +61,11 @@
   },
   "0,-3": {
     "type": "jungle",
-    "power": 3
+    "power": 1
   },
   "0,-2": {
     "type": "river",
-    "power": 2
+    "power": 1
   },
   "0,-1": {
     "type": "village",
@@ -77,19 +77,19 @@
   },
   "0,1": {
     "type": "jungle",
-    "power": 3
+    "power": 1
   },
   "0,2": {
     "type": "jungle",
-    "power": 3
+    "power": 1
   },
   "0,3": {
     "type": "jungle",
-    "power": 3
+    "power": 1
   },
   "1,-3": {
     "type": "river",
-    "power": 2
+    "power": 1
   },
   "1,-2": {
     "type": "village",
@@ -97,19 +97,19 @@
   },
   "1,-1": {
     "type": "jungle",
-    "power": 3
+    "power": 1
   },
   "1,0": {
     "type": "jungle",
-    "power": 3
+    "power": 1
   },
   "1,1": {
     "type": "jungle",
-    "power": 3
+    "power": 1
   },
   "1,2": {
-    "type": "river",
-    "power": 1
+    "type": "jungle",
+    "power": 2
   },
   "2,-3": {
     "type": "river",
@@ -121,11 +121,11 @@
   },
   "2,-1": {
     "type": "jungle",
-    "power": 3
+    "power": 1
   },
   "2,0": {
     "type": "jungle",
-    "power": 3
+    "power": 1
   },
   "2,1": {
     "type": "river",
@@ -141,7 +141,7 @@
   },
   "3,-1": {
     "type": "jungle",
-    "power": 3
+    "power": 1
   },
   "3,0": {
     "type": "river",

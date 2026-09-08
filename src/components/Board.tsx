@@ -16,6 +16,8 @@ interface Props {
   currentPos?: string
   /** Highlight all hexes belonging to this builder piece instance. */
   selectedPieceId?: string | null
+  /** Show B/C/N/I/K/E watermarks (map builder only). */
+  showTileLetters?: boolean
 }
 
 const FILL: Record<TerrainType, string> = {
@@ -28,6 +30,21 @@ const FILL: Record<TerrainType, string> = {
   start: '#3d8f55',
   finish: '#3a8bb8',
   eldorado: '#e6b422',
+}
+
+/** Slightly darker fill for higher power (1 lightest → 4 darkest). */
+function fillForPower(type: TerrainType, power: number): string {
+  const base = FILL[type] ?? '#666'
+  if (type === 'mountain' || type === 'eldorado' || type === 'start') return base
+  const p = Math.max(1, Math.min(4, power || 1))
+  if (p <= 1) return base
+  // power 2 ≈ 12% darker, 3 ≈ 24%, 4 ≈ 32%
+  const factor = p === 2 ? 0.88 : p === 3 ? 0.76 : 0.68
+  const hex = base.replace('#', '')
+  const r = Math.round(parseInt(hex.slice(0, 2), 16) * factor)
+  const g = Math.round(parseInt(hex.slice(2, 4), 16) * factor)
+  const b = Math.round(parseInt(hex.slice(4, 6), 16) * factor)
+  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
 }
 
 function hexPolygon(cx: number, cy: number, size: number): string {
@@ -77,10 +94,10 @@ function SymbolMarks({
   if (type === 'eldorado') {
     return (
       <g>
-        <text x={x} y={y + 1} textAnchor="middle" className="hex-label" fill="#3a2a08" fontSize={11}>
+        <text x={x} y={y + 1} textAnchor="middle" className="hex-label" fill="#3a2a08" fontSize={14}>
           ★
         </text>
-        <text x={x} y={y + 11} textAnchor="middle" className="hex-label" fill="#3a2a08" fontSize={6}>
+        <text x={x} y={y + 13} textAnchor="middle" className="hex-label" fill="#3a2a08" fontSize={8}>
           ED
         </text>
       </g>
@@ -88,53 +105,106 @@ function SymbolMarks({
   }
   if (type === 'start') return null
   if (type === 'camp') {
+    const n = Math.max(1, power || 1)
     return (
-      <text x={x} y={y + 3.5} textAnchor="middle" className="hex-label" fill="#fff" fontSize={8}>
-        ✕
+      <text
+        x={x}
+        y={y + 5}
+        textAnchor="middle"
+        className="hex-label"
+        fill="#fff"
+        fontSize={n >= 3 ? 12 : 14}
+        fontWeight={700}
+        letterSpacing={n >= 3 ? -0.5 : 0}
+      >
+        {'X'.repeat(Math.min(3, n))}
       </text>
     )
   }
   if (type === 'rubble') {
     return (
-      <text x={x} y={y + 3} textAnchor="middle" className="hex-label" fill="#f4f0e8" fontSize={8}>
+      <text x={x} y={y + 5} textAnchor="middle" className="hex-label" fill="#f4f0e8" fontSize={14} fontWeight={700}>
         {power || 1}
       </text>
     )
   }
 
-  const n = Math.max(1, Math.min(3, power || 1))
+  const n = Math.max(1, power || 1)
   if (type === 'jungle' || type === 'river' || type === 'finish' || type === 'village') {
     const color =
       type === 'jungle' ? '#d8f0c8' : type === 'village' ? '#4a3408' : '#e8f4ff'
+
+    if (type === 'river' || type === 'finish') {
+      const count = Math.min(3, n)
+      const spread = count === 1 ? [0] : count === 2 ? [-5.5, 5.5] : [-7, 0, 7]
+      return (
+        <g>
+          {spread.map((ox, i) => {
+            const cx = x + ox
+            const rot = -28 + i * 10
+            return (
+              <g key={i} transform={`rotate(${rot} ${cx} ${y})`}>
+                {/* blade */}
+                <ellipse cx={cx} cy={y - 3.2} rx={2.6} ry={4.2} fill={color} />
+                {/* shaft */}
+                <rect
+                  x={cx - 0.7}
+                  y={y + 0.4}
+                  width={1.4}
+                  height={6.5}
+                  rx={0.7}
+                  fill={color}
+                />
+              </g>
+            )
+          })}
+        </g>
+      )
+    }
+
+    // Village power 4: four coin dots at N/E/S/W.
+    if (type === 'village' && n >= 4) {
+      const d = 5.5
+      const spots: [number, number][] = [
+        [0, -d],
+        [d, 0],
+        [0, d],
+        [-d, 0],
+      ]
+      return (
+        <g>
+          {spots.map(([ox, oy], i) => (
+            <circle
+              key={i}
+              cx={x + ox}
+              cy={y + oy}
+              r={2.8}
+              fill={color}
+              stroke="#3a2a08"
+              strokeWidth={0.55}
+            />
+          ))}
+        </g>
+      )
+    }
+
     const marks = []
-    const spread = n === 1 ? [0] : n === 2 ? [-3.2, 3.2] : [-4.2, 0, 4.2]
-    for (let i = 0; i < n; i++) {
+    const spread = n === 1 ? [0] : n === 2 ? [-5, 5] : [-6.5, 0, 6.5]
+    for (let i = 0; i < Math.min(3, n); i++) {
       const ox = spread[i] ?? 0
       if (type === 'village') {
         marks.push(
-          <circle key={i} cx={x + ox} cy={y} r={2.2} fill={color} stroke="#3a2a08" strokeWidth={0.4} />,
-        )
-      } else if (type === 'river' || type === 'finish') {
-        marks.push(
-          <ellipse
-            key={i}
-            cx={x + ox}
-            cy={y}
-            rx={1.6}
-            ry={3.2}
-            fill={color}
-            transform={`rotate(-25 ${x + ox} ${y})`}
-          />,
+          <circle key={i} cx={x + ox} cy={y} r={3.4} fill={color} stroke="#3a2a08" strokeWidth={0.55} />,
         )
       } else {
         marks.push(
           <rect
             key={i}
-            x={x + ox - 0.7}
-            y={y - 3.5}
-            width={1.4}
-            height={7}
-            rx={0.5}
+            x={x + ox - 1.1}
+            y={y - 5.5}
+            width={2.2}
+            height={11}
+            rx={0.7}
             fill={color}
             transform={`rotate(${-35 + i * 8} ${x + ox} ${y})`}
           />,
@@ -153,6 +223,7 @@ export function Board({
   onCellClick,
   currentPos,
   selectedPieceId,
+  showTileLetters = false,
 }: Props) {
   const size = BOARD_HEX_SIZE
   const wrapRef = useRef<HTMLDivElement>(null)
@@ -197,7 +268,7 @@ export function Board({
   }
 
   const seams = tileBorderEdges(cells, size)
-  const labels = tileLabelPositions(cells, size)
+  const labels = showTileLetters ? tileLabelPositions(cells, size) : []
   const connectors = blockadeConnectors(cells, size)
 
   return (
@@ -235,7 +306,7 @@ export function Board({
           const hi = highlights.includes(cell.id)
           const isHere = cell.id === currentPos
           const selected = Boolean(selectedPieceId && cell.pieceId === selectedPieceId)
-          const fill = FILL[cell.type] ?? '#666'
+          const fill = fillForPower(cell.type, cell.power)
           return (
             <g
               key={cell.id}
@@ -246,12 +317,14 @@ export function Board({
             >
               <polygon
                 points={hexPolygon(x, y, size * 0.95)}
-                fill={hi ? '#fff3a8' : selected ? '#ffe08a' : fill}
-                stroke={selected ? '#fff8dc' : isHere ? '#ffe08a' : '#0d1a10'}
-                strokeWidth={selected ? 2.6 : isHere ? 2.2 : 1}
+                fill={selected ? '#ffe08a' : fill}
+                stroke={
+                  hi ? '#ffe08a' : selected ? '#fff8dc' : isHere ? '#ffe08a' : '#0d1a10'
+                }
+                strokeWidth={hi ? 3.8 : selected ? 2.6 : isHere ? 2.2 : 1}
               />
               {cell.isStart != null && (
-                <text x={x} y={y + 3.5} textAnchor="middle" className="hex-label" fill="#fff" fontSize={9}>
+                <text x={x} y={y + 5} textAnchor="middle" className="hex-label" fill="#fff" fontSize={12}>
                   {cell.isStart}
                 </text>
               )}
@@ -317,15 +390,18 @@ export function Board({
           const tokens = byCell.get(cell.id) ?? []
           if (!tokens.length) return null
           const { x, y } = hexToPixel(cell.q, cell.r, size)
+          const tokenR = size * 0.72
+          const step = tokens.length > 1 ? size * 0.28 : 0
+          const start = -((tokens.length - 1) * step) / 2
           return tokens.map((p, i) => (
             <circle
               key={p.id}
-              cx={x - 5 + i * 9}
-              cy={y - 7}
-              r={5.5}
+              cx={x + start + i * step}
+              cy={y}
+              r={tokenR}
               fill={p.color}
               stroke="#fff"
-              strokeWidth={1.3}
+              strokeWidth={2.2}
               style={{ pointerEvents: 'none' }}
             >
               <title>{p.name}</title>
